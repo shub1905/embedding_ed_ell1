@@ -13,5 +13,8 @@ Dim = int(Config.get(a, b))
 
 Data = []
 
-for i in range(N):
-  Data.append(bin(random.getrandbits(Dim))[2:])
+
+def data():
+  for i in range(N):
+    Data.append(bin(random.getrandbits(Dim))[2:])
+  return Data

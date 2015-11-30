@@ -11,20 +11,35 @@ def partition_string(x):
   partitions = []
   for i in range(0, d, size_b):
     partitions.append(x[i:i + size_b])
-
   return partitions
 
 
+def shifts(string, s):
+  shift_partition = []
+  N = len(string)
+  for i in range(s):
+    shift_partition.append(string[i:N - s + i + 1])
+  return shift_partition
+
+
 def main():
+  test = ['shifts']
   Dim = 1024
   x = bin(random.getrandbits(Dim))[2:]
-  f = lambda x: (len(x), x)
-  partitions = partition_string(x)
-  print x[:37]
-  print x[37:74]
-  print x[-24:], partitions[-1] == x[-24:]
-  print map(f, partitions)
-  print len(partitions), NUMBER_BLOCKS
+  if 'partition_string' in test:
+    f = lambda x: (len(x), x)
+    partitions = partition_string(x)
+    print x[:37]
+    print x[37:74]
+    print x[-24:], partitions[-1] == x[-24:]
+    print map(f, partitions)
+    print len(partitions), NUMBER_BLOCKS
+
+  if 'shifts' in test:
+    s = math.log(Dim, 2)
+    s = int(math.ceil(s**1))
+    shifts_str = shifts(x, s)
+    print len(shifts_str) == s
 
 
 if __name__ == '__main__':
