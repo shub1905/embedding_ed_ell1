@@ -16,5 +16,6 @@ Data = []
 
 def data():
   for i in range(N):
-    Data.append(bin(random.getrandbits(Dim))[2:])
+    x = bin(random.getrandbits(Dim))[2:]
+    Data.append(x.zfill(Dim))
   return Data

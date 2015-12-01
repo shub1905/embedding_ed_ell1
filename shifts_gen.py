@@ -6,11 +6,22 @@ NUMBER_BLOCKS = 0
 def partition_string(x):
   d = len(x)
   global NUMBER_BLOCKS
-  NUMBER_BLOCKS = 2**(math.sqrt(math.log(d,2) * math.log(math.log(d,2),2)))
-  size_b = int(math.ceil(d / NUMBER_BLOCKS))
+  NUMBER_BLOCKS = int(2**(math.sqrt(math.log(d, 2) * math.log(math.log(d, 2), 2))))
+  size_b = int(d * 1.0 / NUMBER_BLOCKS)
+  reminder = d % NUMBER_BLOCKS
   partitions = []
-  for i in range(0, d, size_b):
-    partitions.append(x[i:i + size_b])
+
+  s = 0
+  while(True):
+    if (s >= d):
+      break
+    t = s + size_b
+    if reminder > 0:
+      reminder = reminder - 1
+      t = t + 1
+
+    partitions.append(x[s:t])
+    s = t
   return partitions
 
 
@@ -26,22 +37,20 @@ def main():
   test = ['shifts']
   Dim = 1024
   x = bin(random.getrandbits(Dim))[2:]
+  x = x.zfill(Dim)
   if 'partition_string' in test:
     f = lambda x: (len(x), x)
     partitions = partition_string(x)
-    print x[:37]
-    print x[37:74]
-    print x[-24:], partitions[-1] == x[-24:]
     print map(f, partitions)
     print len(partitions), NUMBER_BLOCKS
 
   if 'shifts' in test:
-    s = math.log(Dim,2)
+    s = math.log(Dim, 2)
     s = int(math.ceil(s**1))
-    shifts_str = shifts(x, s)
+    shifts_str = shifts(x[:101], s)
+    print s,shifts_str
     print len(shifts_str) == s
 
 
 if __name__ == '__main__':
-  # Testing for basic output
   main()
