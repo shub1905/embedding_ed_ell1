@@ -6,7 +6,7 @@ NUMBER_BLOCKS = 0
 def partition_string(x):
   d = len(x)
   global NUMBER_BLOCKS
-  NUMBER_BLOCKS = 2**(math.sqrt(math.log(d, 2) * math.log(math.log(d, 2))))
+  NUMBER_BLOCKS = 2**(math.sqrt(math.log2(d) * math.log(math.log2(d))))
   size_b = int(math.ceil(d / NUMBER_BLOCKS))
   partitions = []
   for i in range(0, d, size_b):
@@ -36,7 +36,7 @@ def main():
     print len(partitions), NUMBER_BLOCKS
 
   if 'shifts' in test:
-    s = math.log(Dim, 2)
+    s = math.log2(Dim)
     s = int(math.ceil(s**1))
     shifts_str = shifts(x, s)
     print len(shifts_str) == s
