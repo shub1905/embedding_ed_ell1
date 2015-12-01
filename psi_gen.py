@@ -3,6 +3,7 @@ import data_generation
 from collections import defaultdict
 import math
 import randomness
+import pudb
 
 block_s_metric = defaultdict()
 Data = data_generation.data()
@@ -12,8 +13,10 @@ R = 10  # to be fixed
 
 
 def s_vals():
+  x_block = shifts_gen.partition_string(Data[0])[0]
   s_val = []
-  s_def = math.log2(data_generation.Dim)
+  s_def = math.log(data_generation.Dim,2)
+  j=0
   while(True):
     s = int(math.ceil(s_def ** j))
     j = j + 1
@@ -71,3 +74,8 @@ def psi(r, s, H, I, key):
     result.add(H[x_new])
 
   return len(result)*1.0 / 2*r
+
+pudb.set_trace()
+all_random_numbers()
+gen_shifts_block()
+final_4d_metric()
