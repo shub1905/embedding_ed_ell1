@@ -6,16 +6,17 @@ import xxhash
 
 
 def gen_random(s, d, r):
-  b = int(math.ceil(d * math.log(4 * s) / s))
-  choices = numpy.random.choice(range(1, d + 1), r * b)
+  print d
+  b = int(d * math.log(4 * s) / s)
+  choices = numpy.random.choice(range(d), r * b)
   I_arr = []
   for i in range(0, r * b, b):
     I_arr.append(list(choices[i:i + b]))
   return I_arr
 
 
-def hash(s, r, x):
-  has = xxhash.xxh64(x, seed=r).intdigest()
+def hash(s, u, x):
+  has = xxhash.xxh64(x, seed=u).intdigest()
   has = has % (4 * s) + 1
   return has
 

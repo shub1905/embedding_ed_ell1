@@ -48,7 +48,7 @@ def main():
     s = math.log(Dim, 2)
     s = int(math.ceil(s**1))
     shifts_str = shifts(x[:101], s)
-    print s,shifts_str
+    print s, shifts_str
     print len(shifts_str) == s
 
 
