@@ -8,33 +8,40 @@ def partition_string(x):
   global NUMBER_BLOCKS
   NUMBER_BLOCKS = int(2**(math.sqrt(math.log(d, 2) * math.log(math.log(d, 2), 2))))
   size_b = int(d * 1.0 / NUMBER_BLOCKS)
-  reminder = d % NUMBER_BLOCKS
-  partitions = []
+  remainder = d % NUMBER_BLOCKS
 
+  end_points = [i*size_b for i in xrange(NUMBER_BLOCKS-remainder+1)]
+  end_points += [end_points[-1] + i*(size_b+1) for i in xrange(1,remainder+1)]
+  partitions = [x[end_points[i]:end_points[i+1]] for i in xrange(len(end_points)-1)]
+
+  '''
   s = 0
   while(True):
     if (s >= d):
       break
     t = s + size_b
-    if reminder > 0:
-      reminder = reminder - 1
+    if remainder > 0:
+      remainder = remainder - 1
       t = t + 1
 
     partitions.append(x[s:t])
     s = t
+  '''
   return partitions
 
 
 def shifts(string, s):
-  shift_partition = []
   N = len(string)
+  shift_partition  = [string[i:N - s + i + 1] for i in xrange(s)]
+  '''
   for i in range(s):
     shift_partition.append(string[i:N - s + i + 1])
+  '''
   return shift_partition
 
 
 def main():
-  test = ['shifts']
+  test = ['partition_string','shifts']
   Dim = 1024
   x = bin(random.getrandbits(Dim))[2:]
   x = x.zfill(Dim)
@@ -48,7 +55,7 @@ def main():
     s = math.log(Dim, 2)
     s = int(math.ceil(s**1))
     shifts_str = shifts(x[:101], s)
-    print s, shifts_str
+    #print s, shifts_str
     print len(shifts_str) == s
 
 
