@@ -54,7 +54,10 @@ def all_random_numbers():
 
 
 def final_4d_metric():
+  count = 0
   for key in block_s_metric:
+    print count, key
+    count = count + 1
     [x_ind, x_block_ind, s] = map(int, key.split('_'))
     rand_key = '{}_{}'.format(x_block_ind, s)
     I_arr = random_s_block[rand_key]
@@ -67,17 +70,23 @@ def final_4d_metric():
 
 
 def psi(r, s, I, key, u, v):
-  result = []
+  result = 0
   x_ss = block_s_metric[key]
   for j in range(s):
     x_new = [x_ss[j][ri] for ri in I]
     x_new = ''.join(x_new)
-    x_new = int(x_new, 2)
-    result.append(v == randomness.hash(s, u, x_new))
+    # x_new = int(x_new, 2)
+    if v == randomness.hash(s, u, x_new):
+      result = result + 1
 
-  return sum(result) * 1.0 / 2 * r
+  return result * 1.0 / 2 * r
 
 all_random_numbers()
+print 'random numbers generated'
+
 gen_shifts_block()
+print 'block shifts calculted', len(block_s_metric)
+
 final_4d_metric()
+print 'final metric calculation'
 pickle.dump(final_metric, open("final.data", "wb"))

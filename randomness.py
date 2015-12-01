@@ -6,7 +6,6 @@ import xxhash
 
 
 def gen_random(s, d, r):
-  print d
   b = int(d * math.log(4 * s) / s)
   choices = numpy.random.choice(range(d), r * b)
   I_arr = []
