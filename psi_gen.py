@@ -3,7 +3,7 @@ import data_generation
 from collections import defaultdict
 import math
 import randomness
-import pudb
+#import pudb
 import pickle
 
 block_s_metric = defaultdict()
@@ -76,7 +76,7 @@ def psi(r, s, I, key, u, v):
     x_new = [x_ss[j][ri] for ri in I]
     x_new = ''.join(x_new)
     # x_new = int(x_new, 2)
-    if v == randomness.hash(s, u, x_new):
+    if v == randomness.custom_hash(s, u, x_new):
       result = result + 1
 
   return result * 1.0 / 2 * r

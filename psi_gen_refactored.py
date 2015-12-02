@@ -65,7 +65,8 @@ def final_4d_metric(blocks_shifts_x):
   count = 0
   start = 0
   #embedding = numpy.zeros() #TODO : Preallocate memory for the embedding
-  embedding_size = 4*len(blocks_shifts_x)*sum([R_vals[i]*possible_s[i] for i in xrange(len(possible_s))])
+  embedding_size = 4*len(blocks_shifts_x)*sum([R_vals[i]*possible_s[i] 
+                                          for i in xrange(len(possible_s))])
   embedding = numpy.zeros((embedding_size))
   for block_id in xrange(len(blocks_shifts_x)):
       for s_id in xrange(len(blocks_shifts_x[block_id])):
@@ -87,7 +88,8 @@ def final_4d_metric(blocks_shifts_x):
                           print j, ri
                           raise
               '''
-              psi_u_all_v = numpy.bincount([randomness.custom_hash(s, u, ''.join([blocks_shifts_x[block_id][s_id][j][ri] 
+              psi_u_all_v = numpy.bincount([
+                      randomness.custom_hash(s, u, ''.join([blocks_shifts_x[block_id][s_id][j][ri] 
                                               for ri in I_arr[u]])) 
                                                   for j in xrange(s)])[1:] * 1.0 / (2 * r)
               embedding[start:(start+psi_u_all_v.shape[0])] = psi_u_all_v

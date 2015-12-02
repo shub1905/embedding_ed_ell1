@@ -19,14 +19,17 @@ Data = []
 def data():
   
   Data = [bin(random.getrandbits(Dim))[2:].zfill(Dim) for i in xrange(N)]
+  '''
   #ed = {}
+  
   ed = numpy.zeros([N,N])
-
+  
   for i in xrange(N):
     for j in xrange(i + 1, N):
       #key = '{}_{}'.format(i, j)
       ed[i,j] = editdistance.eval(Data[i], Data[j])
   pickle.dump(ed, open("ed.data", "wb"))
+  '''
   return Data
 
 
