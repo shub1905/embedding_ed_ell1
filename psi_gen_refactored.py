@@ -7,6 +7,8 @@ Created on Tue Dec  1 14:13:31 2015
 Refactored to make this more like a sketch. It first initializes parameter
  and randomness. Then iteratively creates a sketch of each string.
 
+#TODO : Move all configuration parameters to one location like delta,...
+
 """
 
 import shifts_gen
@@ -16,6 +18,8 @@ import math
 import randomness
 #import pudb
 import pickle
+import numpy
+import editdistance
 
 block_s_metric = defaultdict()
 Data = data_generation.data()
@@ -41,44 +45,102 @@ def s_vals():
 
 possible_s = s_vals()
 
+f = lambda x: int(13.5 * x * math.log(x * 1.0 / delta, 2))
+R_vals = map(f, possible_s)
+
 def get_shifts_block(x):
     partitions = shifts_gen.partition_string(x)
     return [[shifts_gen.shifts(x_block, s) for s in possible_s] for x_block in partitions]
 
 
 def all_random_numbers():
-  f = lambda x: int(13.5 * x * math.log(x * 1.0 / delta, 2))
-  R_vals = map(f, possible_s)
+  
   return [[randomness.gen_random(s, len(partitions[j]) - s + 1, R_vals[i]) 
               for i, s in enumerate(possible_s)]
                   for j in xrange(len(partitions))]
+
+random_s_block = all_random_numbers()
       
-def final_4d_metric():
+def final_4d_metric(blocks_shifts_x):
   count = 0
-  for key in block_s_metric:
-    print count, key
-    count = count + 1
-    [x_ind, x_block_ind, s] = map(int, key.split('_'))
-    rand_key = '{}_{}'.format(x_block_ind, s)
-    I_arr = random_s_block[rand_key]
+  start = 0
+  #embedding = numpy.zeros() #TODO : Preallocate memory for the embedding
+  embedding_size = 4*len(blocks_shifts_x)*sum([R_vals[i]*possible_s[i] for i in xrange(len(possible_s))])
+  embedding = numpy.zeros((embedding_size))
+  for block_id in xrange(len(blocks_shifts_x)):
+      for s_id in xrange(len(blocks_shifts_x[block_id])):
+          count += 1
+          #print count
+          s = possible_s[s_id]
+          I_arr = random_s_block[block_id][s_id]
+          r = len(I_arr)
+          for u in xrange(r):
+              '''
+              psi_u_all_v = []
+              STR = []
+              for j in xrange(s):
+                  for ri in I_arr[u]:
+                      try:
+                          STR.append(blocks_shifts_x[block_id][s_id][j][ri])
+                          psi_u_all_v.append(''.join(STR))
+                      except:
+                          print j, ri
+                          raise
+              '''
+              psi_u_all_v = numpy.bincount([randomness.custom_hash(s, u, ''.join([blocks_shifts_x[block_id][s_id][j][ri] 
+                                              for ri in I_arr[u]])) 
+                                                  for j in xrange(s)])[1:] * 1.0 / (2 * r)
+              embedding[start:(start+psi_u_all_v.shape[0])] = psi_u_all_v
+              start += 4*s
+              '''
+              if count == 1:
+                  embedding = numpy.zeros((4*s))
+                  embedding[:psi_u_all_v.shape[0]] = psi_u_all_v
+              else:
+                  temp = numpy.zeros((4*s))
+                  temp[:psi_u_all_v.shape[0]] = psi_u_all_v
+                  embedding = numpy.concatenate((embedding, temp))
+              '''
+  return embedding
 
-    R = int(13.5 * s * math.log(s * 1.0 / delta, 2))
-    for u in range(R):
-      for v in range(4 * s):
-        key_final = '{}_{}_{}'.format(key, u, v)
-        final_metric[key_final] = psi(R, s, I_arr[u], key, u, v)
-
+'''    
 def psi(x, r, s, I, u, v):
-    
+  
   return sum([v == randomness.custom_hash(s, u, ''.join([x[j][ri] for ri in I])) 
               for j in xrange(s)]) * 1.0 / 2 * r
-
+'''
 all_random_numbers()
 print 'random numbers generated'
 
-gen_shifts_block()
+if __name__ == '__main__':
+    import time
+    distortion = 2**(math.sqrt(math.log(data_generation.Dim)*math.log(math.log(data_generation.Dim))))
+    embeddings = [0 for x in Data]
+
+    start_time = time.time()
+    for i, x in enumerate(Data):
+        print i
+        blocks_shifts_x = get_shifts_block(x)
+        embeddings[i] = final_4d_metric(blocks_shifts_x)
+    print time.time() - start_time
+        
+    start_time = time.time()
+    for i in xrange(len(embeddings)):
+        for j in range(i+1, len(embeddings)):
+            l1 = sum(abs(embeddings[i]-embeddings[j]))
+#            if max(l1/edit, edit/l1) > distortion:
+#                print l1, edit, max(l1/edit, edit/l1), distortion
+    print time.time() - start_time
+    
+    start_time = time.time()    
+    for i in xrange(len(embeddings)):
+        for j in range(i+1, len(embeddings)):
+            edit = editdistance.eval(Data[i],Data[j])
+    print time.time() - start_time
+'''
 print 'block shifts calculted', len(block_s_metric)
 
 final_4d_metric()
 print 'final metric calculation'
 pickle.dump(final_metric, open("final.data", "wb"))
+'''
