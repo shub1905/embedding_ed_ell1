@@ -25,7 +25,7 @@ block_s_metric = defaultdict()
 Data = data_generation.data()
 random_s_block = defaultdict()
 final_metric = defaultdict()
-delta = 0.1
+delta = data_generation.delta
 
 partitions = shifts_gen.partition_string(Data[0])
 num_partitions = len(partitions)
@@ -47,6 +47,8 @@ possible_s = s_vals()
 
 f = lambda x: int(13.5 * x * math.log(x * 1.0 / delta, 2))
 R_vals = map(f, possible_s)
+print delta
+print R_vals
 
 def get_shifts_block(x):
     partitions = shifts_gen.partition_string(x)
@@ -121,24 +123,31 @@ if __name__ == '__main__':
 
     start_time = time.time()
     for i, x in enumerate(Data):
-        print i
+        #print i
         blocks_shifts_x = get_shifts_block(x)
         embeddings[i] = final_4d_metric(blocks_shifts_x)
     print time.time() - start_time
         
     start_time = time.time()
+    counts = 0
+    errors = 0
     for i in xrange(len(embeddings)):
         for j in range(i+1, len(embeddings)):
             l1 = sum(abs(embeddings[i]-embeddings[j]))
-#            if max(l1/edit, edit/l1) > distortion:
-#                print l1, edit, max(l1/edit, edit/l1), distortion
+            edit = editdistance.eval(Data[i],Data[j])
+            counts += 1
+            if max(l1/edit, edit/l1) > distortion:
+                errors += 1
+                #print l1, edit, max(l1/edit, edit/l1), distortion
     print time.time() - start_time
-    
+    print edit, l1
+    '''
     start_time = time.time()    
     for i in xrange(len(embeddings)):
         for j in range(i+1, len(embeddings)):
             edit = editdistance.eval(Data[i],Data[j])
     print time.time() - start_time
+    '''
 '''
 print 'block shifts calculted', len(block_s_metric)
 

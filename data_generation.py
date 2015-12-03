@@ -1,24 +1,19 @@
 import random
 import ConfigParser
-import pickle
-import editdistance
-import numpy
 
 Config = ConfigParser.ConfigParser()
 Config.read('config.cfg')
-a = Config.sections()[0]
-b = Config.options(a)[0]
-N = int(Config.get(a, b))
 
-b = Config.options(a)[1]
-Dim = int(Config.get(a, b))
-
-Data = []
-
+N = int(Config.get('data size', 'Size'))
+Dim = int(Config.get('data size', 'Dim'))
+delta = float(Config.get('prob', 'delta'))
 
 def data():
   
-  Data = [bin(random.getrandbits(Dim))[2:].zfill(Dim) for i in xrange(N)]
+  if N >= 2**Dim:
+      Data = [bin(i)[2:].zfill(Dim) for i in xrange(2**Dim)]
+  else:
+      Data = [bin(random.getrandbits(Dim))[2:].zfill(Dim) for i in xrange(N)]
   '''
   #ed = {}
   
