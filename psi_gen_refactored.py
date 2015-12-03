@@ -126,21 +126,25 @@ if __name__ == '__main__':
         #print i
         blocks_shifts_x = get_shifts_block(x)
         embeddings[i] = final_4d_metric(blocks_shifts_x)
-    print time.time() - start_time
+    print 'embedding time = ',time.time() - start_time
         
     start_time = time.time()
     counts = 0
     errors = 0
+    distances = numpy.zeros((len(embeddings),len(embeddings),3))
     for i in xrange(len(embeddings)):
         for j in range(i+1, len(embeddings)):
             l1 = sum(abs(embeddings[i]-embeddings[j]))
             edit = editdistance.eval(Data[i],Data[j])
+            distances[i,j,0] = edit
+            distances[i,j,1] = l1
+            distances[i,j,2] = max(l1/edit, edit/l1)
             counts += 1
             if max(l1/edit, edit/l1) > distortion:
                 errors += 1
                 #print l1, edit, max(l1/edit, edit/l1), distortion
     print time.time() - start_time
-    print edit, l1
+    numpy.savez('distances.data', distances)
     '''
     start_time = time.time()    
     for i in xrange(len(embeddings)):
