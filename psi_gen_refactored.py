@@ -148,7 +148,8 @@ if __name__ == '__main__':
                 errors += 1
                 #print l1, edit, max(l1/edit, edit/l1), distortion
     print time.time() - start_time
-    numpy.savez('distances2.data', distances)
+    file_name = 'distances_{}_{}.data'.format(data_generation.N, data_generation.Dim)
+    numpy.savez(file_name, distances)
     '''
     start_time = time.time()    
     for i in xrange(len(embeddings)):
