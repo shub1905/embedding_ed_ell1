@@ -168,7 +168,7 @@ if __name__ == '__main__':
         'edit_distance_time':edit_distance_time,
         'total_time':l1_distance_time+embedding_time}
 
-    file_name = 'distances_time_{}_{}.data'.format(data_size, data_dim)
+    file_name = 'distances/distances_time_{}_{}_{}.data'.format(data_size, data_dim, delta)
     numpy.savez(file_name, distances, time_dict)
     '''
     start_time = time.time()    
