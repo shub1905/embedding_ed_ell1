@@ -130,26 +130,37 @@ if __name__ == '__main__':
             embeddings[i,:] = embedding
         else:
             embeddings[i,:] = final_4d_metric(blocks_shifts_x)
-    print 'embedding time = ',time.time() - start_time
+
+    embedding_time = time.time() - start_time
+    print 'embedding time = ', embedding_time
         
     start_time = time.time()
-    counts = 0
     errors = 0
-    distances = numpy.zeros((len(embeddings),len(embeddings),3))
+    distances = numpy.zeros((len(embeddings),len(embeddings),2))
     for i in xrange(len(embeddings)):
         for j in range(i+1, len(embeddings)):
             l1 = sum(abs(embeddings[i]-embeddings[j]))
-            edit = editdistance.eval(Data[i],Data[j])
-            distances[i,j,0] = edit
             distances[i,j,1] = l1
-            distances[i,j,2] = max(l1/edit, edit/l1)
-            counts += 1
-            if max(l1/edit, edit/l1) > distortion:
-                errors += 1
-                #print l1, edit, max(l1/edit, edit/l1), distortion
-    print time.time() - start_time
-    file_name = 'distances_{}_{}.data'.format(data_generation.N, data_generation.Dim)
-    numpy.savez(file_name, distances)
+
+    l1_distance_time = time.time() - start_time
+    print 'l1_distance_time time = ', l1_distance_time
+
+    start_time = time.time()
+    for i in xrange(len(embeddings)):
+      for j in range(i+1, len(embeddings)):
+          edit = editdistance.eval(Data[i],Data[j])
+          distances[i,j,0] = edit
+
+    edit_distance_time = time.time() - start_time
+    print 'edit_distance_time = ', edit_distance_time
+    time_dict = {
+        'embedding_time': embedding_time, 
+        'l1_distance_time':l1_distance_time,
+        'edit_distance_time':edit_distance_time,
+        'total_time':l1_distance_time+embedding_time}
+
+    file_name = 'distances_time_{}_{}.data'.format(data_generation.N, data_generation.Dim)
+    numpy.savez(file_name, distances, time_dict)
     '''
     start_time = time.time()    
     for i in xrange(len(embeddings)):
