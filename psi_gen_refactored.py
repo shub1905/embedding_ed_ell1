@@ -118,14 +118,18 @@ print 'random numbers generated'
 
 if __name__ == '__main__':
     import time
-    distortion = 2**(math.sqrt(math.log(data_generation.Dim)*math.log(math.log(data_generation.Dim))))
-    embeddings = [0 for x in Data]
+    distortion = 2**(math.sqrt(math.log(data_generation.Dim,2)*math.log(math.log(data_generation.Dim,2))))
 
     start_time = time.time()
     for i, x in enumerate(Data):
         #print i
         blocks_shifts_x = get_shifts_block(x)
-        embeddings[i] = final_4d_metric(blocks_shifts_x)
+        if i == 0:
+            embedding = final_4d_metric(blocks_shifts_x)
+            embeddings = numpy.zeros((len(Data),embedding.shape[0]))
+            embeddings[i,:] = embedding
+        else:
+            embeddings[i,:] = final_4d_metric(blocks_shifts_x)
     print 'embedding time = ',time.time() - start_time
         
     start_time = time.time()
@@ -144,7 +148,7 @@ if __name__ == '__main__':
                 errors += 1
                 #print l1, edit, max(l1/edit, edit/l1), distortion
     print time.time() - start_time
-    numpy.savez('distances.data', distances)
+    numpy.savez('distances2.data', distances)
     '''
     start_time = time.time()    
     for i in xrange(len(embeddings)):
