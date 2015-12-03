@@ -1,14 +1,14 @@
 import random
-import ConfigParser
+# import ConfigParser
 
-Config = ConfigParser.ConfigParser()
-Config.read('config.cfg')
+# Config = ConfigParser.ConfigParser()
+# Config.read('config.cfg')
 
-N = int(Config.get('data size', 'Size'))
-Dim = int(Config.get('data size', 'Dim'))
-delta = float(Config.get('prob', 'delta'))
+# N = int(Config.get('data size', 'Size'))
+# Dim = int(Config.get('data size', 'Dim'))
+# delta = float(Config.get('prob', 'delta'))
 
-def data():
+def data(N, Dim):
   
   if N >= 2**Dim:
       Data = [bin(i)[2:].zfill(Dim) for i in xrange(2**Dim)]

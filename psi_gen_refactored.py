@@ -16,24 +16,33 @@ import data_generation
 from collections import defaultdict
 import math
 import randomness
-#import pudb
 import pickle
 import numpy
 import editdistance
+import sys
+
+if len(sys.argv) < 4:
+  print '''usage: python file.py size dimension delta'''
+  sys.exit(0)
+
+data_size = int(sys.argv[1])
+data_dim = int(sys.argv[2])
+delta = float(sys.argv[3])
 
 block_s_metric = defaultdict()
-Data = data_generation.data()
+Data = data_generation.data(data_size, data_dim)
 random_s_block = defaultdict()
 final_metric = defaultdict()
-delta = data_generation.delta
+# delta = data_generation.delta
 
 partitions = shifts_gen.partition_string(Data[0])
 num_partitions = len(partitions)
 
+
 def s_vals():
   x_block = shifts_gen.partition_string(Data[0])[0]
   s_val = []
-  s_def = math.log(data_generation.Dim, 2)
+  s_def = math.log(data_dim, 2)
   j = 0
   while(True):
     s = int(math.ceil(s_def ** j))
@@ -118,7 +127,7 @@ print 'random numbers generated'
 
 if __name__ == '__main__':
     import time
-    distortion = 2**(math.sqrt(math.log(data_generation.Dim,2)*math.log(math.log(data_generation.Dim,2))))
+    distortion = 2**(math.sqrt(math.log(data_dim,2)*math.log(math.log(data_dim,2))))
 
     start_time = time.time()
     for i, x in enumerate(Data):
@@ -159,7 +168,7 @@ if __name__ == '__main__':
         'edit_distance_time':edit_distance_time,
         'total_time':l1_distance_time+embedding_time}
 
-    file_name = 'distances_time_{}_{}.data'.format(data_generation.N, data_generation.Dim)
+    file_name = 'distances_time_{}_{}.data'.format(data_size, data_dim)
     numpy.savez(file_name, distances, time_dict)
     '''
     start_time = time.time()    
