@@ -11,8 +11,8 @@ for files in os.listdir('distances/'):
     file_name = 'distances/{}'.format(files)
     dist = numpy.load(file_name)
     params = file_name[:-9].split('_')
-    if len(params) == 5:
-        [size, dimension, delta] = map(float, params[-3:])
+    if len(params) >= 5:
+        [size, dimension, delta] = map(float, params[2:5])
         if 'arr_1' in dist.keys():
             temp = dist['arr_1'].tolist()
             time_dict[files] = temp
