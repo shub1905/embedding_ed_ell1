@@ -1,8 +1,10 @@
+from __future__ import division
 import numpy
 import os
 
 time_dict = {}
-data_file = open('data.time', 'w')
+data_file = open('data_norm.time', 'w')
+data_file.write('size\tdimension\tdelta\tembedding time\tl1 time\tedit_time\ttotat time\n')
 ''' format = size, dimension, delta, embedding time, l1 time, edit_time, totat time'''
 
 for files in os.listdir('distances/'):
@@ -14,8 +16,9 @@ for files in os.listdir('distances/'):
         if 'arr_1' in dist.keys():
             temp = dist['arr_1'].tolist()
             time_dict[files] = temp
-            str_to_write = '{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(size, dimension, delta, temp['embedding_time'], temp[
-                                                                 'l1_distance_time'], temp['edit_distance_time'], temp['total_time'])
+            norm_factor = size * (size - 1) / 2
+            str_to_write = '{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(size, dimension, delta, temp['embedding_time'] / size, temp[
+                                                                 'l1_distance_time'] / norm_factor, temp['edit_distance_time'] / norm_factor, temp['total_time'] / norm_factor)
             data_file.write(str_to_write)
 
 
