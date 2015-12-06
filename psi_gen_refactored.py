@@ -28,6 +28,7 @@ if len(sys.argv) < 4:
 data_size = int(sys.argv[1])
 data_dim = int(sys.argv[2])
 delta = float(sys.argv[3])
+file_number = int(sys.argv[4])
 
 block_s_metric = defaultdict()
 Data = data_generation.data(data_size, data_dim)
@@ -143,12 +144,12 @@ if __name__ == '__main__':
     embedding_time = time.time() - start_time
     print 'embedding time = ', embedding_time
         
-    start_time = time.time()
     errors = 0
     distances = numpy.zeros((len(embeddings),len(embeddings),2))
+    start_time = time.time()
     for i in xrange(len(embeddings)):
         for j in range(i+1, len(embeddings)):
-            l1 = sum(abs(embeddings[i]-embeddings[j]))
+            l1 = numpy.absolute(embeddings[i]-embeddings[j]).sum()
             distances[i,j,1] = l1
 
     l1_distance_time = time.time() - start_time
@@ -156,7 +157,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
     for i in xrange(len(embeddings)):
-      for j in range(i+1, len(embeddings)):
+      for j in xrange(i+1, len(embeddings)):
           edit = editdistance.eval(Data[i],Data[j])
           distances[i,j,0] = edit
 
@@ -168,7 +169,7 @@ if __name__ == '__main__':
         'edit_distance_time':edit_distance_time,
         'total_time':l1_distance_time+embedding_time}
 
-    file_name = 'distances/distances_time_{}_{}_{}.data'.format(data_size, data_dim, delta)
+    file_name = 'distances/distances_time_{}_{}_{}_{}.data'.format(data_size, data_dim, delta, file_number)
     numpy.savez(file_name, distances, time_dict)
     '''
     start_time = time.time()    

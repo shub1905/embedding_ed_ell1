@@ -1,4 +1,5 @@
 import random
+import string
 # import ConfigParser
 
 # Config = ConfigParser.ConfigParser()
@@ -9,11 +10,13 @@ import random
 # delta = float(Config.get('prob', 'delta'))
 
 def data(N, Dim):
-  
+  # Data = ['adfadfdfafgfgafgfgafadfagfafbfbba','adfaduioffgfgafgfgafadqwerafbfbba']
+  ''.join(random.choice(string.ascii_lowercase) for _ in range(Dim))
   if N >= 2**Dim:
       Data = [bin(i)[2:].zfill(Dim) for i in xrange(2**Dim)]
   else:
       Data = [bin(random.getrandbits(Dim))[2:].zfill(Dim) for i in xrange(N)]
+      # Data = [''.join(random.choice(string.ascii_lowercase) for _ in range(Dim)) for i in xrange(N)]
   '''
   #ed = {}
   
