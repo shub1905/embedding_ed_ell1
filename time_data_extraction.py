@@ -4,8 +4,8 @@ import os
 
 time_dict = {}
 data_file = open('data_norm.time', 'w')
-data_file.write('size\tdimension\tdelta\tembedding time\tl1 time\tedit_time\ttotat time\n')
-''' format = size, dimension, delta, embedding time, l1 time, edit_time, totat time'''
+data_file.write('size\tdimension\tdelta\tembedding time\tl1 time\tedit_time\total time\n')
+''' format = size, dimension, delta, embedding time, l1 time, edit_time, total time'''
 
 for files in os.listdir('distances/'):
     file_name = 'distances/{}'.format(files)
@@ -13,6 +13,8 @@ for files in os.listdir('distances/'):
     params = file_name[:-9].split('_')
     if len(params) >= 5:
         [size, dimension, delta] = map(float, params[2:5])
+        if dimension <= 20 and size > 2**dimension:
+            size = 2**dimension
         if 'arr_1' in dist.keys():
             temp = dist['arr_1'].tolist()
             time_dict[files] = temp
