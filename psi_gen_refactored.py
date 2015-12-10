@@ -10,7 +10,7 @@ Refactored to make this more like a sketch. It first initializes parameter
 #TODO : Move all configuration parameters to one location like delta,...
 
 """
-
+from __future__ import division
 import shifts_gen
 import data_generation
 from collections import defaultdict
@@ -28,7 +28,8 @@ if len(sys.argv) < 4:
 data_size = int(sys.argv[1])
 data_dim = int(sys.argv[2])
 delta = float(sys.argv[3])
-file_number = int(sys.argv[4])
+file_number = sys.argv[4]
+alphabet_size = 2
 
 block_s_metric = defaultdict()
 Data = data_generation.data(data_size, data_dim)
@@ -43,7 +44,7 @@ num_partitions = len(partitions)
 def s_vals():
   x_block = shifts_gen.partition_string(Data[0])[0]
   s_val = []
-  s_def = math.log(data_dim, 2)
+  s_def = math.log(data_dim * alphabet_size/2, 2)
   j = 0
   while(True):
     s = int(math.ceil(s_def ** j))
