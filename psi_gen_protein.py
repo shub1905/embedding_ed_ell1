@@ -24,19 +24,21 @@ import numpy
 import editdistance
 import sys
 
-if len(sys.argv) < 3:
-  print '''usage: python file.py delta file_suffix'''
-  sys.exit(0)
+# if len(sys.argv) < 3:
+#   print '''usage: python file.py delta file_suffix'''
+#   sys.exit(0)
 
 # data_size = int(sys.argv[1])
 # data_dim = int(sys.argv[2])
-delta = float(sys.argv[1])
-file_number = sys.argv[2]
+# delta = float(sys.argv[1])
+# file_number = sys.argv[2]
+delta = 0.1
+file_number = 'proteinNew'
 alphabet_size = 26
 
 block_s_metric = defaultdict()
 # Data = data_generation.data(data_size, data_dim)
-Data = protein_read.read_file_protein()
+Data = protein_read.read_file_protein('raw_data/multigene_zfill.txt')
 data_size = len(Data)
 data_dim = len(Data[0])
 

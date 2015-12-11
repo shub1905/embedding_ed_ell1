@@ -7,7 +7,11 @@ data_file = open('data_norm.time', 'w')
 data_file.write('size\tdimension\tdelta\tembedding time\tl1 time\tedit_time\total time\n')
 ''' format = size, dimension, delta, embedding time, l1 time, edit_time, total time'''
 
+files_removed = ['protein','alpha2','alpha_2']
+
 for files in os.listdir('distances/'):
+    if reduce(lambda x,y:x or y, [x in files for x in files_removed]):
+        continue
     file_name = 'distances/{}'.format(files)
     dist = numpy.load(file_name)
     params = file_name[:-9].split('_')

@@ -5,16 +5,18 @@ import sys
 
 
 def mean_distortion(file_name):
-    distortion = []
     dist = numpy.load(file_name)
     dist_p = list(dist['arr_0'])
+    distortion = []
     for a in dist_p:
         for b in a:
             if int(b[0]) != 0 and int(b[1] != 0):
+                if b[1] > b[0]:
+                    print 'ERROR'
                 distortion.append(b[0] / b[1])
 
-    print '_'.join(file_name.split('_')[2:]), numpy.mean(distortion),
-    print numpy.std(distortion), dist['arr_1'].tolist()['total_time']
+    print '_'.join(file_name.split('_')[2:]), numpy.mean(distortion), numpy.max(distortion), numpy.min(distortion),
+    print numpy.std(distortion), dist['arr_1'].tolist()
     return (numpy.mean(distortion), numpy.std(distortion))
 
 

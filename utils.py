@@ -54,7 +54,7 @@ def nearest_neighbours_linear_scan(queries, database, distance_function, iterato
     
 def compare_nearest_neighbours(queries, database, base_metric,
                                base_metric_result, embedded_metric_result,
-                               print_summary = True):
+                               print_summary = True, file_name = 'nn_compare_dist.png'):
 
     """
     Returns an array with [embedded_nearest_neighbour, embedded_distance, 
@@ -70,12 +70,17 @@ def compare_nearest_neighbours(queries, database, base_metric,
     for query_index, query in enumerate(queries):
         output[query_index, 3] = base_metric(queries[query_index], 
                                             database[int(embedded_metric_result[query_index, 0])])
-    
     if print_summary == True:
-        distance_distribution = (output[:,2]/output[:,3])
+        # distance_distribution = (output[:,2]/output[:,3])
+        distance_distribution = numpy.zeros(0)
+        for i in range(len(output[:,2])):
+            if int(output[:,3][i]) != 0:
+                distance_distribution = numpy.append(distance_distribution,output[:,2][i]/output[:,3][i])
         distance_distribution.sort()
         print distance_distribution.shape
         pyplot.plot(distance_distribution, 
                     numpy.arange(distance_distribution.shape[0])*1.0/distance_distribution.shape[0])
-        pyplot.savefig('nn_compare_dist.png')
+        pyplot.savefig(file_name)
+        pyplot.xlabel('Distance to actual neighbour/ Distance of neighbour by approximation')
+        pyplot.ylabel('Percentage of observations below Threshold')
     return output

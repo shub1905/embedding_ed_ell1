@@ -22,7 +22,7 @@ import editdistance
 import sys
 
 if len(sys.argv) < 4:
-  print '''usage: python file.py size dimension delta'''
+  print '''usage: python file.py size dimension delta file_name'''
   sys.exit(0)
 
 data_size = int(sys.argv[1])
@@ -49,7 +49,7 @@ def s_vals():
   while(True):
     s = int(math.ceil(s_def ** j))
     j = j + 1
-    if s > len(x_block):
+    if s > len(x_block) or j > 2:
       break
     s_val.append(s)
   return s_val
@@ -59,7 +59,7 @@ possible_s = s_vals()
 f = lambda x: int(13.5 * x * math.log(x * 1.0 / delta, 2))
 R_vals = map(f, possible_s)
 print delta
-print R_vals
+print possible_s, R_vals
 
 def get_shifts_block(x):
     partitions = shifts_gen.partition_string(x)
@@ -157,12 +157,12 @@ if __name__ == '__main__':
     print 'l1_distance_time time = ', l1_distance_time
 
     start_time = time.time()
-    for i in xrange(len(embeddings)):
-      for j in xrange(i+1, len(embeddings)):
-          edit = editdistance.eval(Data[i],Data[j])
-          distances[i,j,0] = edit
+    # for i in xrange(len(embeddings)):
+    #   for j in xrange(i+1, len(embeddings)):
+    #       edit = editdistance.eval(Data[i],Data[j])
+    #       distances[i,j,0] = edit
 
-    edit_distance_time = time.time() - start_time
+    edit_distance_time = float('inf')#time.time() - start_time
     print 'edit_distance_time = ', edit_distance_time
     time_dict = {
         'embedding_time': embedding_time, 
