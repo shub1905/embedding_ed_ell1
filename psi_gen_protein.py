@@ -32,7 +32,7 @@ if len(sys.argv) < 3:
 # data_dim = int(sys.argv[2])
 delta = float(sys.argv[1])
 file_number = sys.argv[2]
-alphabet_size = 2
+alphabet_size = 26
 
 block_s_metric = defaultdict()
 # Data = data_generation.data(data_size, data_dim)
@@ -134,6 +134,18 @@ def psi(x, r, s, I, u, v):
 all_random_numbers()
 print 'random numbers generated'
 
+def return_embeddings():
+    for i, x in enumerate(Data):
+        blocks_shifts_x = get_shifts_block(x)
+        if i == 0:
+            embedding = final_4d_metric(blocks_shifts_x)
+            embeddings = numpy.zeros((len(Data),embedding.shape[0]))
+            embeddings[i,:] = embedding
+        else:
+            embeddings[i,:] = final_4d_metric(blocks_shifts_x)
+    return embeddings
+
+
 if __name__ == '__main__':
     import time
     distortion = 2**(math.sqrt(math.log(data_dim,2)*math.log(math.log(data_dim,2))))
@@ -186,10 +198,3 @@ if __name__ == '__main__':
             edit = editdistance.eval(Data[i],Data[j])
     print time.time() - start_time
     '''
-'''
-print 'block shifts calculted', len(block_s_metric)
-
-final_4d_metric()
-print 'final metric calculation'
-pickle.dump(final_metric, open("final.data", "wb"))
-'''

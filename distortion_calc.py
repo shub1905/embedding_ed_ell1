@@ -3,6 +3,7 @@ import numpy
 import os
 import sys
 
+
 def mean_distortion(file_name):
     distortion = []
     dist = numpy.load(file_name)
@@ -12,7 +13,8 @@ def mean_distortion(file_name):
             if int(b[0]) != 0 and int(b[1] != 0):
                 distortion.append(b[0] / b[1])
 
-    print '_'.join(file_name.split('_')[2:]), numpy.mean(distortion), numpy.std(distortion), dist['arr_1'].tolist()['total_time']
+    print '_'.join(file_name.split('_')[2:]), numpy.mean(distortion),
+    print numpy.std(distortion), dist['arr_1'].tolist()['total_time']
     return (numpy.mean(distortion), numpy.std(distortion))
 
 
@@ -28,11 +30,11 @@ def comp_distortion_variation(delta, file_tuple):
 
 def alphabet_comparison():
     delta = '0.1'
-    file_tuple = ['alpha_2.', 'alpha2.']
-    means2 = comp_distortion_variation(delta, file_tuple)
-    print '''-----------------26----------------------'''
-    file_tuple = ['alpha26.', 'alpha_26.']
-    means26 = comp_distortion_variation(delta, file_tuple)
+    file_tuple = [['alpha_2.', 'alpha2.'],['alpha26.', 'alpha_26.']]
+    for tup in file_tuple:
+        means = comp_distortion_variation(delta, tup)
+        print '''---------------------------------------'''
+
 
 def protein_comparison():
     delta = '0.1'
