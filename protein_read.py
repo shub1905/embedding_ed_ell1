@@ -1,7 +1,7 @@
 import sys
 
 
-def read_file_protein(file_name):
+def read_file_protein(file_name=None):
     if file_name == None:
         file_name = 'raw_data/UniProt.txt'
 
