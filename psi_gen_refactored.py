@@ -21,21 +21,25 @@ import numpy
 import editdistance
 import sys
 
-if len(sys.argv) < 4:
-  print '''usage: python file.py size dimension delta file_name'''
+if len(sys.argv) < 5:
+  print '''usage: python file.py size dimension delta typos file_name'''
   sys.exit(0)
 
 data_size = int(sys.argv[1])
 data_dim = int(sys.argv[2])
 delta = float(sys.argv[3])
-file_number = sys.argv[4]
+data_typos = int(sys.argv[4])
+file_number = sys.argv[5]
 alphabet_size = 2
 
+# Data = data_generation.data(data_size, data_dim)
+Data = data_generation.data_typo(data_dim, k=data_typos)
+data_dim = len(Data[0])
+data_size = len(Data)
+
 block_s_metric = defaultdict()
-Data = data_generation.data(data_size, data_dim)
 random_s_block = defaultdict()
 final_metric = defaultdict()
-# delta = data_generation.delta
 
 partitions = shifts_gen.partition_string(Data[0])
 num_partitions = len(partitions)
@@ -89,41 +93,15 @@ def final_4d_metric(blocks_shifts_x):
           I_arr = random_s_block[block_id][s_id]
           r = len(I_arr)
           for u in xrange(r):
-              '''
-              psi_u_all_v = []
-              STR = []
-              for j in xrange(s):
-                  for ri in I_arr[u]:
-                      try:
-                          STR.append(blocks_shifts_x[block_id][s_id][j][ri])
-                          psi_u_all_v.append(''.join(STR))
-                      except:
-                          print j, ri
-                          raise
-              '''
               psi_u_all_v = numpy.bincount([
                       randomness.custom_hash(s, u, ''.join([blocks_shifts_x[block_id][s_id][j][ri] 
                                               for ri in I_arr[u]])) 
                                                   for j in xrange(s)])[1:] * 1.0 / (2 * r)
               embedding[start:(start+psi_u_all_v.shape[0])] = psi_u_all_v
               start += 4*s
-              '''
-              if count == 1:
-                  embedding = numpy.zeros((4*s))
-                  embedding[:psi_u_all_v.shape[0]] = psi_u_all_v
-              else:
-                  temp = numpy.zeros((4*s))
-                  temp[:psi_u_all_v.shape[0]] = psi_u_all_v
-                  embedding = numpy.concatenate((embedding, temp))
-              '''
   return embedding
 
-'''    
-def psi(x, r, s, I, u, v):
-  
-  return sum([v == randomness.custom_hash(s, u, ''.join([x[j][ri] for ri in I])) 
-              for j in xrange(s)]) * 1.0 / 2 * r
-'''
+
 all_random_numbers()
 print 'random numbers generated'
 
@@ -133,7 +111,6 @@ if __name__ == '__main__':
 
     start_time = time.time()
     for i, x in enumerate(Data):
-        #print i
         blocks_shifts_x = get_shifts_block(x)
         if i == 0:
             embedding = final_4d_metric(blocks_shifts_x)
@@ -157,12 +134,12 @@ if __name__ == '__main__':
     print 'l1_distance_time time = ', l1_distance_time
 
     start_time = time.time()
-    # for i in xrange(len(embeddings)):
-    #   for j in xrange(i+1, len(embeddings)):
-    #       edit = editdistance.eval(Data[i],Data[j])
-    #       distances[i,j,0] = edit
+    for i in xrange(len(embeddings)):
+      for j in xrange(i+1, len(embeddings)):
+          edit = editdistance.eval(Data[i],Data[j])
+          distances[i,j,0] = edit
 
-    edit_distance_time = float('inf')#time.time() - start_time
+    edit_distance_time = time.time() - start_time
     print 'edit_distance_time = ', edit_distance_time
     time_dict = {
         'embedding_time': embedding_time, 
@@ -172,17 +149,3 @@ if __name__ == '__main__':
 
     file_name = 'distances/distances_time_{}_{}_{}_{}.data'.format(data_size, data_dim, delta, file_number)
     numpy.savez(file_name, distances, time_dict)
-    '''
-    start_time = time.time()    
-    for i in xrange(len(embeddings)):
-        for j in range(i+1, len(embeddings)):
-            edit = editdistance.eval(Data[i],Data[j])
-    print time.time() - start_time
-    '''
-'''
-print 'block shifts calculted', len(block_s_metric)
-
-final_4d_metric()
-print 'final metric calculation'
-pickle.dump(final_metric, open("final.data", "wb"))
-'''

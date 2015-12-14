@@ -11,16 +11,15 @@ def mean_distortion(file_name):
     for a in dist_p:
         for b in a:
             if int(b[0]) != 0 and int(b[1] != 0):
-                if b[1] > b[0]:
-                    print 'ERROR'
-                distortion.append(b[0] / b[1])
+                temp = max(b[0] / b[1], b[1] / b[0])
+                distortion.append(temp)
 
     print '_'.join(file_name.split('_')[2:]), numpy.mean(distortion), numpy.max(distortion), numpy.min(distortion),
     print numpy.std(distortion), dist['arr_1'].tolist()
     return (numpy.mean(distortion), numpy.std(distortion))
 
 
-def comp_distortion_variation(delta, file_tuple):
+def comp_distortion_variation(file_tuple, delta='0.1'):
     for file_name in os.listdir('distances/'):
         means = []
         if reduce(lambda x, y: x or y, [x in file_name for x in file_tuple]):
@@ -32,7 +31,7 @@ def comp_distortion_variation(delta, file_tuple):
 
 def alphabet_comparison():
     delta = '0.1'
-    file_tuple = [['alpha_2.', 'alpha2.'],['alpha26.', 'alpha_26.']]
+    file_tuple = [['alpha_2.', 'alpha2.'], ['alpha26.', 'alpha_26.']]
     for tup in file_tuple:
         means = comp_distortion_variation(delta, tup)
         print '''---------------------------------------'''
@@ -46,5 +45,8 @@ def protein_comparison():
 if __name__ == '__main__':
     if 'protein' in sys.argv:
         protein_comparison()
-    else:
+    elif 'alpha' in sys.argv:
         alphabet_comparison()
+    else:
+        f_tuple = (sys.argv[1],)
+        comp_distortion_variation(f_tuple)
