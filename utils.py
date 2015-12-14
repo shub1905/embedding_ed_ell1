@@ -71,7 +71,6 @@ def compare_nearest_neighbours(queries, database, base_metric,
         output[query_index, 3] = base_metric(queries[query_index], 
                                             database[int(embedded_metric_result[query_index, 0])])
     if print_summary == True:
-        # distance_distribution = (output[:,2]/output[:,3])
         distance_distribution = numpy.zeros(0)
         for i in range(len(output[:,2])):
             if int(output[:,3][i]) != 0:
@@ -83,5 +82,6 @@ def compare_nearest_neighbours(queries, database, base_metric,
         pyplot.ylabel('Percentage of observations below Threshold')
         pyplot.plot(distance_distribution, 
                     numpy.arange(distance_distribution.shape[0])*1.0/distance_distribution.shape[0])
+        # pyplot.axis([0,1.1,0,1.1])
         pyplot.savefig(file_name)
     return output
