@@ -1,10 +1,11 @@
-import psi_gen_protein
+import data_generation
+import psi_generator
 import editdistance
 import utils
 import numpy
 
-Data = psi_gen_protein.Data
-embeddings = psi_gen_protein.return_embeddings()
+Data = data_generation.read_file_protein()
+embeddings = psi_generator.driver_embeddings(Data, alphabet_size=22)
 
 edit_distance_nn = utils.nearest_neighbours_linear_scan(
     Data, Data, editdistance.eval, iterator_type='list')

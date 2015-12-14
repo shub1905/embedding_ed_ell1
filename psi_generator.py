@@ -105,17 +105,22 @@ def return_edit_distance(Data, embeddings, distances):
     return edit_distance_time
 
 
-def driver_function(Data, options):
+def driver_embeddings(Data, alphabet_size=2, delta=0.1):
     data_dim = len(Data[0])
     data_size = len(Data)
 
-    possible_s = s_vals(Data[0], options.alphabet_size, data_dim)
-    R_vals = possible_r_vals(options.delta, possible_s)
+    possible_s = s_vals(Data[0], alphabet_size, data_dim)
+    R_vals = possible_r_vals(delta, possible_s)
 
     partitions = shifts_gen.partition_string(Data[0])
     random_s_block = all_random_numbers(possible_s, partitions, R_vals)
 
-    (embeddings, embed_time) = return_embeddings(Data, random_s_block, R_vals, possible_s)
+    return return_embeddings(Data, random_s_block, R_vals, possible_s)
+
+
+def driver_function(Data, alphabet_size=2, delta=0.1, file_suffix=''):
+    (embeddings, embed_time) = driver_embeddings(Data, alphabet_size, delta)
+
     distances = numpy.zeros((len(embeddings), len(embeddings), 2))
     l1_time = return_l1_distance(embeddings, distances)
     edit_time = return_edit_distance(Data, embeddings, distances)
@@ -126,8 +131,7 @@ def driver_function(Data, options):
         'edit_distance_time': edit_time,
         'total_time': l1_time + embed_time}
 
-    file_name = 'distances/distances_time_{}_{}_{}_{}.data'.format(
-        data_size, data_dim, options.delta, options.file_suffix)
+    file_name = 'distances/distances_time_{}_{}_{}_{}.data'.format(len(Data), len(Data[0]), delta, file_suffix)
     numpy.savez(file_name, distances, time_dict)
 
 
@@ -177,4 +181,4 @@ if __name__ == '__main__':
         option_parsing(print_usage=True)
         sys.exit(0)
 
-    driver_function(Data, options)
+    driver_function(Data, options.alphabet_size, options.delta, options.file_suffix)

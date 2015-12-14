@@ -5,10 +5,10 @@ import common
 from optparse import OptionParser
 
 
-def generate_time_file(include, exclude, file_name='data_norm.time'):
+def generate_time_file(include, exclude, output_name='results/data_norm.time'):
     files_list = common.get_file_names(include, exclude)
     time_dict = {}
-    data_file = open(file_name, 'w')
+    data_file = open(output_name, 'w')
     data_file.write('size\tdimension\tdelta\tembedding time\tl1 time\tedit_time\ttotal time\n')
     ''' format = size, dimension, delta, embedding time, l1 time, edit_time, total time'''
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     parser.add_option("-i", "--include", dest="include", action='append',
                       help='include files matching all of these regex')
     parser.add_option("-f", "--file", dest="file_name",
-                      default='data_norm.time', help='write stats to this file')
+                      default='results/data_norm.time', help='write stats to this file')
     (options, args) = parser.parse_args()
 
     exclude = options.exclude

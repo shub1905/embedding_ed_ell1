@@ -15,7 +15,7 @@ RESULTS_DIR = 'results/'
 
 #%% Plotting runtimes
 
-data = pandas.read_csv('data_norm.time', delimiter='\t')
+data = pandas.read_csv(RESULTS_DIR + 'data_norm.time', delimiter='\t')
 new_arr = data[data['delta'] == 0.1]
 max_d = int(max(new_arr['dimension']))
 min_d = int(min(new_arr['dimension']))
@@ -23,8 +23,7 @@ a = range(min_d, max_d, 100)
 
 
 pyplot.figure(2)
-pyplot.plot(new_arr['dimension'], new_arr['embedding time'], 'r+', a, [x *
-                                                                       math.log(x, 2) / 2**13 for x in a], 'b--', a, [x**2 * 1.0 / 2**25 for x in a], 'g--')
+pyplot.plot(new_arr['dimension'], new_arr['embedding time'], 'r+', a, [x * math.log(x, 2) / 2**13 for x in a], 'b--', a, [x**2 * 1.0 / 2**25 for x in a], 'g--')
 pyplot.xlabel('Dimension')
 pyplot.ylabel('Embedding time')
 pyplot.savefig(RESULTS_DIR + 'Embedding_time.png')
