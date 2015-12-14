@@ -78,9 +78,10 @@ def compare_nearest_neighbours(queries, database, base_metric,
                 distance_distribution = numpy.append(distance_distribution,output[:,2][i]/output[:,3][i])
         distance_distribution.sort()
         print distance_distribution.shape
+        
+        pyplot.xlabel('Distance to actual neighbour/ Distance of neighbour by approximation')
+        pyplot.ylabel('Percentage of observations below Threshold')
         pyplot.plot(distance_distribution, 
                     numpy.arange(distance_distribution.shape[0])*1.0/distance_distribution.shape[0])
         pyplot.savefig(file_name)
-        pyplot.xlabel('Distance to actual neighbour/ Distance of neighbour by approximation')
-        pyplot.ylabel('Percentage of observations below Threshold')
     return output
