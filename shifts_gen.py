@@ -14,29 +14,12 @@ def partition_string(x):
   end_points += [end_points[-1] + i*(size_b+1) for i in xrange(1,remainder+1)]
   partitions = [x[end_points[i]:end_points[i+1]] for i in xrange(len(end_points)-1)]
 
-  '''
-  s = 0
-  while(True):
-    if (s >= d):
-      break
-    t = s + size_b
-    if remainder > 0:
-      remainder = remainder - 1
-      t = t + 1
-
-    partitions.append(x[s:t])
-    s = t
-  '''
   return partitions
 
 
 def shifts(string, s):
   N = len(string)
   shift_partition  = [string[i:N - s + i + 1] for i in xrange(s)]
-  '''
-  for i in range(s):
-    shift_partition.append(string[i:N - s + i + 1])
-  '''
   return shift_partition
 
 
@@ -55,7 +38,6 @@ def main():
     s = math.log(Dim, 2)
     s = int(math.ceil(s**1))
     shifts_str = shifts(x[:101], s)
-    #print s, shifts_str
     print len(shifts_str) == s
 
 

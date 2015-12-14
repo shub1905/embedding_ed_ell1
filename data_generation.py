@@ -5,7 +5,6 @@ from pprint import pprint
 
 
 def data(N, Dim):
-    # Data = ['adfadfdfafgfgafgfgafadfagfafbfbba','adfaduioffgfgafgfgafadqwerafbfbba']
     ''.join(random.choice(string.ascii_lowercase) for _ in range(Dim))
     if N >= 2**Dim:
         Data = [bin(i)[2:].zfill(Dim) for i in xrange(2**Dim)]

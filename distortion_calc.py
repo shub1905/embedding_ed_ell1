@@ -2,6 +2,8 @@ from __future__ import division
 import numpy
 import os
 import sys
+import common
+from optparse import OptionParser
 
 
 def mean_distortion(file_name):
@@ -19,34 +21,21 @@ def mean_distortion(file_name):
     return (numpy.mean(distortion), numpy.std(distortion))
 
 
-def comp_distortion_variation(file_tuple, delta='0.1'):
-    for file_name in os.listdir('distances/'):
+def comp_distortion_variation(include, exclude, delta='0.1'):
+    files = common.get_file_names(include, exclude)
+    for file_name in files:
         means = []
-        if reduce(lambda x, y: x or y, [x in file_name for x in file_tuple]):
-            if file_name.split('_')[4] == delta:
-                ans = mean_distortion('distances/' + file_name)
-                means.append(ans[0])
+        ans = mean_distortion('distances/' + file_name)
+        means.append(ans[0])
     return means
 
-
-def alphabet_comparison():
-    delta = '0.1'
-    file_tuple = [['alpha_2.', 'alpha2.'], ['alpha26.', 'alpha_26.']]
-    for tup in file_tuple:
-        means = comp_distortion_variation(delta, tup)
-        print '''---------------------------------------'''
-
-
-def protein_comparison():
-    delta = '0.1'
-    file_tuple = ['protein']
-    means = comp_distortion_variation(delta, file_tuple)
-
 if __name__ == '__main__':
-    if 'protein' in sys.argv:
-        protein_comparison()
-    elif 'alpha' in sys.argv:
-        alphabet_comparison()
-    else:
-        f_tuple = (sys.argv[1],)
-        comp_distortion_variation(f_tuple)
+    parser = OptionParser()
+    parser.add_option("-e", "--exclude", dest="exclude", help='exclude all files matching these regex')
+    parser.add_option("-i", "--include", dest="include", help='include files matching all of these regex')
+    (options, args) = parser.parse_args()
+
+    exclude = options.exclude.split() if options.exclude else None
+    include = options.include.split() if options.include else '*'
+    print include, exclude
+    comp_distortion_variation(include, exclude)
