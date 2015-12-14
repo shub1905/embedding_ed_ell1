@@ -32,16 +32,16 @@ def generate_time_file(include, exclude, file_name='data_norm.time'):
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option("-e", "--exclude", dest="exclude",
+    parser.add_option("-e", "--exclude", dest="exclude", action='append',
                       help='exclude all files matching these regex')
-    parser.add_option("-i", "--include", dest="include",
+    parser.add_option("-i", "--include", dest="include", action='append',
                       help='include files matching all of these regex')
     parser.add_option("-f", "--file", dest="file_name",
                       default='data_norm.time', help='write stats to this file')
     (options, args) = parser.parse_args()
 
-    exclude = options.exclude.split() if options.exclude else None
-    include = options.include.split() if options.include else '*'
+    exclude = options.exclude
+    include = options.include if options.include else '*'
     file_name = options.file_name
 
     generate_time_file(include, exclude, file_name)
